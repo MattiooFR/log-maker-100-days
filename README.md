@@ -2,7 +2,7 @@
 
 Welcome to this Log Maker.
 
-Just download the file and write `python main.py` in your terminal where the file is located to generate a log.md as this [example](log.md)
+Just download the file and write `python main.py` in your terminal where the file is located to generate a log.md as this [example](log.md).
 
 If you want to generate a log from a specific date (mostly and anterior date if you already started the challenge) you can do it this way :
 
