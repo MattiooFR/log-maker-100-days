@@ -17,7 +17,7 @@ with open("log.md", "x") as f:
 
 *Main Commitment*:
 
-I will code in **Python** programming language for at least an hour every day for the next 100 days.
+I will code in **YOUR LANGUAGE** programming language for at least an hour every day for the next 100 days.
 
 Start Date: {start_day.strftime("%B %d, %Y")}
 End Date (without any breaks): {(start_day + datetime.timedelta(100)).strftime("%B %d, %Y")}

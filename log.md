@@ -2,7 +2,7 @@
 
 *Main Commitment*:
 
-I will code in **Python** programming language for at least an hour every day for the next 100 days.
+I will code in **YOUR LANGUAGE** programming language for at least an hour every day for the next 100 days.
 
 Start Date: December 22, 2019
 End Date (without any breaks): March 31, 2020
