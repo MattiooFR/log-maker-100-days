@@ -40,10 +40,11 @@ else:
     filename = args.filename + ".md"
 
 
-if os.path.isfile(filename):
+if os.path.isfile(filename) and args.overwrite:
     create = "w"
 else:
     create = "x"
+
 with open(filename, create) as f:
     f.write(f"""# 100 Days Of Code - Log
 
