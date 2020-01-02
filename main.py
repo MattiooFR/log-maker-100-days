@@ -2,6 +2,11 @@ import datetime
 import os.path
 from argparse import ArgumentParser
 
+
+class ErrorFormatDate(Exception):
+    pass
+
+
 isDateparserLoaded = True
 try:
     import dateparser
@@ -30,6 +35,8 @@ args = parser.parse_args()
 
 if args.date and isDateparserLoaded:
     start_day = dateparser.parse(args.date)
+    if not start_day:
+        raise(ErrorFormatDate("Date format not recognized..."))
 else:
     start_day = datetime.date.today()
 
