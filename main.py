@@ -1,4 +1,5 @@
 import datetime
+import os.path
 from argparse import ArgumentParser
 
 isDateparserLoaded = True
@@ -39,7 +40,11 @@ else:
     filename = args.filename + ".md"
 
 
-with open(filename, "x") as f:
+if os.path.isfile(filename):
+    create = "w"
+else:
+    create = "x"
+with open(filename, create) as f:
     f.write(f"""# 100 Days Of Code - Log
 
 *Main Commitment*:
