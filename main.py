@@ -33,8 +33,13 @@ else:
     start_day = datetime.date.today()
 
 duration = args.duration
+if args.filename[-3:] == ".md":
+    filename = args.filename
+else:
+    filename = args.filename + ".md"
 
-with open("log.md", "x") as f:
+
+with open(filename, "x") as f:
     f.write(f"""# 100 Days Of Code - Log
 
 *Main Commitment*:
