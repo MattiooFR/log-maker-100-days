@@ -16,10 +16,11 @@ If you want to generate a log from a specific date you can do it this way :
 This will generate a log.md starting from the December 22, 2019. Check the [dateparser doc](https://dateparser.readthedocs.io/en/latest/) to see all the available date format.
 
 Available options when running the program :
+```
 * -o, --overwrite : overwrite if file already exist
 * -d, --duration : custom challenge duration
 * -f, --filename : custom generated filename (default = 'log.md')
-
+```
 
 ### Todo :
 
