@@ -24,7 +24,7 @@ Available options when running the program :
 
 ### Todo :
 
-[ ] Update existing file if days are missed during challenge
-[ ] New output format (html, excel, ...)
-[ ] Make a live website log generator for challenge
-[ ] Choose any type of challenge (not just code)
+* [ ] Update existing file if days are missed during challenge
+* [ ] New output format (html, excel, ...)
+* [ ] Make a live website log generator for challenge
+* [ ] Choose any type of challenge (not just code)
