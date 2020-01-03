@@ -23,7 +23,7 @@ Available options when running the program :
 
 ### Todo :
 
-[checkbox:unchecked] Update existing file if days are missed during challenge
-[checkbox:unchecked] New output format (html, excel, ...)
-[checkbox:unchecked] Make a live website log generator for challenge
-[checkbox:unchecked] Choose any type of challenge (not just code)
+[ ] Update existing file if days are missed during challenge
+[ ] New output format (html, excel, ...)
+[ ] Make a live website log generator for challenge
+[ ] Choose any type of challenge (not just code)
