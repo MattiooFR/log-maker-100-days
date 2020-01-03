@@ -2,7 +2,7 @@
 
 Welcome to this Log Maker.
 
-Download the files and write `python main.py` in your terminal where the file is located to generate a log.md as this [example](log.md).
+Download the files or `git clone https://github.com/MattiooFR/log-maker-100-days` and write `python main.py` in your terminal where the files are located to generate a log.md as this [example](log.md).
 
 ### Requirements :
 
