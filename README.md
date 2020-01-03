@@ -17,9 +17,9 @@ This will generate a log.md starting from the December 22, 2019. Check the [date
 
 Available options when running the program :
 ```
-* -o, --overwrite : overwrite if file already exist
-* -d, --duration : custom challenge duration
-* -f, --filename : custom generated filename (default = 'log.md')
+-o, --overwrite : overwrite if file already exist
+-d, --duration : custom challenge duration
+-f, --filename : custom generated filename (default = 'log.md')
 ```
 
 ### Todo :
