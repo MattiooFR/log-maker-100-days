@@ -1,8 +1,11 @@
 import datetime
 import os.path
+import string
 from argparse import ArgumentParser
 from log_table import LogTable
 
+
+VERBOSE = False
 
 class ErrorFormatDate(Exception):
     pass
@@ -56,15 +59,36 @@ def get_filename(args):
         filename = args.filename
     else:
         filename = args.filename + ".md"
+    while not args.overwrite and args.list and os.path.isfile(filename):
+        if filename[-4] not in string.digits:
+            filename = filename[:-3] + "1" + filename[-3:]
+        else:
+            i = -5
+            while i > (-1 * len(filename)) and filename[i] in string.digits:
+                i -= 1
+            filename = filename[:i + 1] + str(int(filename[i + 1 : -3]) + 1) + filename[-3:]
+    
     return filename
+
+def get_verbosity(args):
+    return args.verbose
+
+def print_message(args, start_day, duration, filename, create):
+    print(f"main.py called with args: {args}")
+    print(f"Writing log with start_day: {start_day} and duration: {duration} days "\
+        + f"to filename '{filename}' with file writing options '{create}''")
 
 def main():
     args = get_args()
+    VERBOSE = get_verbosity(args)
     DPLoaded = get_date_parser_loaded()
     start_day = get_start_day(args, DPLoaded)
     duration = args.duration
     filename = get_filename(args)
     create = get_create(args, filename)
+
+    if VERBOSE:
+        print_message(args, start_day, duration, filename, create)
 
     with open(filename, create) as f:
             log_table = LogTable(start_day, days=duration)
