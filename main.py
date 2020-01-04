@@ -3,9 +3,15 @@ import os.path
 from argparse import ArgumentParser
 from log_table import LogTable
 
+# TODO :
+# I would suggest to change the name of your main.py, that could be confusing.
+# I would also put all the text parameters in another file (help customisation and later internationnalization).
+# You could also exit at the very begining it all the lib are not available (os.exit(1) or something close)...
+
 
 class ErrorFormatDate(Exception):
     pass
+
 
 def get_date_parser_loaded():
     try:
@@ -16,7 +22,8 @@ def get_date_parser_loaded():
     A log.md with the date of today will still be created in case this is what you are looking for.")
         return False
     return True
-    
+
+
 def get_args():
     parser = ArgumentParser()
     parser.add_argument("date", nargs='?', default="",
@@ -35,6 +42,7 @@ def get_args():
     args = parser.parse_args()
     return args
 
+
 def get_start_day(args, isDateparserLoaded):
     if args.date and isDateparserLoaded:
         start_day = dateparser.parse(args.date)
@@ -44,6 +52,7 @@ def get_start_day(args, isDateparserLoaded):
         start_day = datetime.date.today()
     return start_day
 
+
 def get_create(args, filename):
     if os.path.isfile(filename) and args.overwrite:
         create = "w"
@@ -51,12 +60,14 @@ def get_create(args, filename):
         create = "x"
     return create
 
+
 def get_filename(args):
     if len(args.filename) > 3 and args.filename[-3:] == ".md":
         filename = args.filename
     else:
         filename = args.filename + ".md"
     return filename
+
 
 def main():
     args = get_args()
@@ -67,13 +78,12 @@ def main():
     create = get_create(args, filename)
 
     with open(filename, create) as f:
-            log_table = LogTable(start_day, days=duration)
-            f.write(log_table.get_intro())
-            f.write(log_table.get_string_table())
-            f.write(log_table.get_diary())
-            f.write(f"\n\n\n# Conclusion\n\n")
+        log_table = LogTable(start_day, days=duration)
+        f.write(log_table.get_intro())
+        f.write(log_table.get_string_table())
+        f.write(log_table.get_diary())
+        f.write(f"\n\n\n# Conclusion\n\n")
+
 
 if __name__ == '__main__':
     main()
-
-
