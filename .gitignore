@@ -196,3 +196,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Markdown Files
+*.md
