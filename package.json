@@ -1,0 +1,31 @@
+{
+  "name": "100dayslogmaker",
+  "version": "0.1.0",
+  "description": "A markdown log generator for the 100DaysOfCode.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MattiooFR/log-maker-100-days.git"
+  },
+  "keywords": [
+    "100DaysOfCode",
+    "log.md",
+    "markdown"
+  ],
+  "author": "Mathieu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MattiooFR/log-maker-100-days/issues"
+  },
+  "homepage": "https://github.com/MattiooFR/log-maker-100-days#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "1.19.1"
+  }
+}
