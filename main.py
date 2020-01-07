@@ -3,10 +3,11 @@ import os.path
 import string
 from argparse import ArgumentParser
 from log_table import LogTable
+from log_parser import LogParser
 
 # TODO :
 # I would suggest to change the name of your main.py, that could be confusing.
-# I would also put all the text parameters in another file (help customisation and later internationnalization).
+# I would also put all the text parameters in another file (help customisation and later internationalization).
 # You could also exit at the very begining it all the lib are not available (os.exit(1) or something close)...
 
 
@@ -22,7 +23,7 @@ def get_date_parser_loaded():
     except ImportError as e:
         print("# INFO : Module dateparser is not installed, run : 'pip install dateparser', \
     or pipenv|conda install dateparser if this is what you are using. \
-    A log.md with the date of today will still be created in case this is what you are looking for.")
+    A log.md with the date of today will still be create_stringd in case this is what you are looking for.")
         return False
     return True
 
@@ -42,6 +43,8 @@ def get_args():
                         default=100, type=int)
     parser.add_argument("-v", "--verbose", help='print process infos',
                         action="store_true")
+    parser.add_argument("-u", "--update", help='update an existing log file',
+                        action="store_true")
     args = parser.parse_args()
     return args
 
@@ -56,12 +59,12 @@ def get_start_day(args, isDateparserLoaded):
     return start_day
 
 
-def get_create(args, filename):
+def get_create_string(args, filename):
     if os.path.isfile(filename) and args.overwrite:
-        create = "w"
+        create_string = "w"
     else:
-        create = "x"
-    return create
+        create_string = "x"
+    return create_string
 
 
 def get_filename(args):
@@ -84,10 +87,21 @@ def get_filename(args):
 def get_verbosity(args):
     return args.verbose
 
-def print_message(args, start_day, duration, filename, create):
+def print_message(args, start_day, duration, filename, create_string):
     print(f"main.py called with args: {args}")
     print(f"Writing log with start_day: {start_day} and duration: {duration} days "\
-        + f"to filename '{filename}' with file writing options '{create}''")
+        + f"to filename '{filename}' with file writing options '{create_string}''")
+
+def write_log_table(filename, create_string, start_day, duration):
+    with open(filename, create_string) as f:
+        log_table = LogTable(start_day, days=duration)
+        f.write(log_table.get_intro())
+        f.write(log_table.get_string_table())
+        f.write(log_table.get_diary())
+        f.write(f"\n\n\n# Conclusion\n\n")
+    if VERBOSE:
+        print(f"Successfully wrote log file to {filename}")
+
 
 def main():
     args = get_args()
@@ -96,18 +110,16 @@ def main():
     start_day = get_start_day(args, DPLoaded)
     duration = args.duration
     filename = get_filename(args)
-    create = get_create(args, filename)
+    create_string = get_create_string(args, filename)
 
     if VERBOSE:
-        print_message(args, start_day, duration, filename, create)
+        print_message(args, start_day, duration, filename, create_string)
 
-    with open(filename, create) as f:
-        log_table = LogTable(start_day, days=duration)
-        f.write(log_table.get_intro())
-        f.write(log_table.get_string_table())
-        f.write(log_table.get_diary())
-        f.write(f"\n\n\n# Conclusion\n\n")
-
+    if args.update:
+        parser = LogParser(filename)
+        parser.update_log()
+    else:
+        write_log_table(filename, create_string, start_day, duration)
 
 if __name__ == '__main__':
     main()

@@ -57,15 +57,18 @@ End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days
             diary.append(f"""
 ### Day {day_count}: {day_format}
 
-**Today's Progress**:
+**Today's Progress**: 
 
-**Thoughts:**
+**Thoughts**: 
 
-**Link(s) to work**: [Example](http://www.example.com)
+**Link(s) to work**: [Example](https://www.example.com) 
 
-[Back to Top](#{self.days}-days-of-code---log)
+| |
+| :--: |
+| [Back to Top](#{self.days}-days-of-code---log) |
 
-----""")
+---
+""")
             day_count += 1
         return "".join(diary)
 
@@ -75,7 +78,7 @@ End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days
             string_table += "".join(row)
             string_table += "\n"
         string_table += "\n"
-        return string_table
+        return string_table + "----"
 
     def write_table(self, filename):
         with open("test.md", "w") as write_file:
