@@ -3,10 +3,9 @@ import os.path
 from argparse import ArgumentParser
 from log_table import LogTable
 
-# TODO Change the name of your main.py, that could be confusing.
-# TODO Put all the text parameters in another file (help customisation and later internationnalization).
-# TODO Exit at the very begining if all the lib are not available
-# (os.exit(1) or something close).
+
+# TODO Put all the text parameters in another file (help customisation and
+# later internationnalization).
 
 
 class ErrorFormatDate(Exception):
@@ -16,11 +15,13 @@ class ErrorFormatDate(Exception):
 def get_date_parser_loaded():
     try:
         import dateparser
+        global dateparser
     except ImportError:
         print(
-            "# INFO : Module dateparser is not installed, run : 'pip install dateparser', \
-    or pipenv|conda install dateparser if this is what you are using. \
-    A log.md with the date of today will still be created in case this is what you are looking for.")
+            "# INFO : Module dateparser is not installed, run : 'pip install dateparser', "
+            "or pipenv|conda install dateparser if this is what you are using. \n"
+            f"A log.{get_args().type} with the date of today ({datetime.date.today()}) "
+            "will still be created in case this is what you are looking for.")
         return False
     return True
 
@@ -32,7 +33,7 @@ def get_args():
         nargs='?',
         default="",
         help='Set your own starting date : 22/12/2019, yesterday, or\
-                            "20 of december 2019" in any language. Default is today')
+             "20 of december 2019" in any language. Default is today')
     parser.add_argument(
         "-o",
         "--overwrite",
@@ -43,7 +44,7 @@ def get_args():
         "--filename",
         help='choose your own filename output',
         type=str,
-        default="log.md")
+        default="log")
     parser.add_argument(
         "-l",
         "--list",
@@ -55,6 +56,12 @@ def get_args():
         help='set a custom duration for your challenge',
         default=100,
         type=int)
+    parser.add_argument(
+        "-t",
+        "--type",
+        help='generate your log in html format',
+        default="md",
+        type=str)
     parser.add_argument("-v", "--verbose", help='print process infos',
                         action="store_true")
     args = parser.parse_args()
@@ -80,10 +87,10 @@ def get_create(args, filename):
 
 
 def get_filename(args):
-    if len(args.filename) > 3 and args.filename[-3:] == ".md":
+    if len(args.filename) > 3 and args.filename[-3:] == args.type:
         filename = args.filename
     else:
-        filename = args.filename + ".md"
+        filename = args.filename + "." + args.type
     return filename
 
 
@@ -96,7 +103,7 @@ def main():
     create = get_create(args, filename)
 
     with open(filename, create) as f:
-        log_table = LogTable(start_day, days=duration)
+        log_table = LogTable(start_day, days=duration, filetype=args.type)
         f.write(log_table.get_intro())
         f.write(log_table.get_string_table())
         f.write(log_table.get_diary())
