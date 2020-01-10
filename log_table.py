@@ -18,7 +18,7 @@ I will code in **YOUR LANGUAGE** programming language for at least an hour every
 Start Date: **{self.start_day.strftime("%B %d, %Y")}**\n
 End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days)).strftime("%B %d, %Y")}**
 
-----
+-----
 """
         return intro
 
@@ -67,7 +67,7 @@ End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days
 | :--: |
 | [Back to Top](#{self.days}-days-of-code---log) |
 
----
+----
 """)
             day_count += 1
         return "".join(diary)
@@ -78,7 +78,7 @@ End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days
             string_table += "".join(row)
             string_table += "\n"
         string_table += "\n"
-        return string_table + "----"
+        return string_table + "-----"
 
     def write_table(self, filename):
         with open("test.md", "w") as write_file:

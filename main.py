@@ -23,7 +23,7 @@ def get_date_parser_loaded():
     except ImportError as e:
         print("# INFO : Module dateparser is not installed, run : 'pip install dateparser', \
     or pipenv|conda install dateparser if this is what you are using. \
-    A log.md with the date of today will still be create_stringd in case this is what you are looking for.")
+    A log.md with the date of today will still be created in case this is what you are looking for.")
         return False
     return True
 
