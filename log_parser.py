@@ -1,6 +1,8 @@
 from os import path
 import datetime
 import dateparser
+from log_table import LogTable
+import string
 
 
 class LogParser():
@@ -11,7 +13,13 @@ class LogParser():
         else:
             self.log_file = filename
         self.intro, self.table, self.diary = self.parse_log()
-        self.days = 100  # TODO: Parse
+        self.days = self.get_days()
+        self.diary_object_form = None
+
+    def get_days(self):
+        first_line = self.intro.split("\n")[0]
+        days_string = "".join([char for char in first_line if char in string.digits])
+        return int(days_string)
 
     def parse_log(self):
         with open(self.log_file, 'r') as log:
@@ -39,11 +47,39 @@ class LogParser():
             return {}
 
     def update_log(self):
+        self.update_diary()
+        self.update_table()
+        self.update_intro()
+        with open(self.log_file, 'w') as write_file:
+            write_file.write(self.intro)
+            write_file.write(self.table + "-----\n")
+            write_file.write("".join(self.diary))
+    
+    def get_header(self, columns):
+        header = [["| Days |"]]
+        header[-1].extend([f" {str(i)} |" for i in range(1, columns + 1)])
+        header.append([f"| -- " for i in range(columns + 1)])
+        header[-1].extend("|")
+        return header
+
+    def update_table(self):
+        if not self.diary_object_form:
+            raise ValueError("Update diary before updating table")
+        columns = len(self.table.split("\n")[0].strip("|").split("|")) - 1
+        table_generator = LogTable(columns=columns, days=self.days)
+        table_generator.day_iter = iter([dateparser.parse(entry['Day']) for entry in self.diary_object_form])
+        table = table_generator.get_string_table()
+        self.table = table
+    
+    def update_intro(self):
+        table_generator = LogTable()
+        days = [dateparser.parse(entry['Day']) for entry in self.diary_object_form]
+        self.intro = table_generator.get_intro(start_day=days[0], end_day=days[-1], days=self.days)
+
+    def update_diary(self):
         non_empty = [entry for entry in self.diary if not self.is_empty(entry)]
-        print(f"Non-empty length = {len(non_empty)}")
         last_day = dateparser.parse(
             non_empty[-1]["Day"]) if non_empty else None
-        print(last_day)
         if last_day:
             while len(non_empty) < self.days:
                 last_day += datetime.timedelta(1)
@@ -53,8 +89,6 @@ class LogParser():
                     '**Link(s) to work**': '[Example](https://www.example.com)',
                     'Day': last_day.strftime("%B %d, %Y"),
                 })
-            for entry in non_empty:
-                print(entry)
             new_diary = [
                 self.get_string_entry(
                     i + 1,
@@ -64,10 +98,7 @@ class LogParser():
                     work=entry['**Link(s) to work**']) for i,
                 entry in enumerate(non_empty)]
             self.diary = new_diary
-            with open(self.log_file, 'w') as write_file:
-                write_file.write(self.intro + "-----\n")
-                write_file.write(self.table + "-----\n")
-                write_file.write("".join(self.diary))
+            self.diary_object_form = non_empty
 
     def get_string_entry(
             self,

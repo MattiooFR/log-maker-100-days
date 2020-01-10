@@ -3,20 +3,24 @@ import datetime
 
 class LogTable():
 
-    def __init__(self, start_day, columns=10, days=100):
+    def __init__(self, start_day=datetime.date.today(), columns=10, days=100):
         self.columns = columns
         self.days = days
         self.start_day = start_day
-        self.table = self.gen_table()
+        self.table = None
+        self.day_iter = iter([self.start_day + datetime.timedelta(day_count - 1) for day_count in range(1, self.days + 1)])
 
-    def get_intro(self):
-        intro = f"""# {self.days} Days Of Code - Log
+    def get_intro(self, start_day=None, end_day=None, days=None):
+        start_day = start_day if start_day else self.start_day
+        end_day = end_day if end_day else start_day + datetime.timedelta(self.days - 1)
+        days = days if days else self.days
+        intro = f"""# {days} Days Of Code - Log
 *Main Commitment*:
 
-I will code in **YOUR LANGUAGE** programming language for at least an hour every day for the next 100 days.
+I will code in **YOUR LANGUAGE** programming language for at least an hour every day for the next {days} days.
 
-Start Date: **{self.start_day.strftime("%B %d, %Y")}**\n
-End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days)).strftime("%B %d, %Y")}**
+Start Date: **{start_day.strftime("%B %d, %Y")}**\n
+End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
 
 -----
 """
@@ -29,7 +33,7 @@ End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days
         header[-1].extend("|")
         return header
 
-    def gen_table(self):
+    def gen_table(self, iterator):
         day_count = 1
         table = []
         table.extend(self.get_header())
@@ -38,7 +42,7 @@ End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days
             table.append([])
             table[-1].append(f"| {day_count - 1:02d} |")
             while row_counter < self.columns:
-                day = self.start_day + datetime.timedelta(day_count - 1)
+                day = iterator.__next__()
                 day_format = day.strftime("%B-%d-%Y")
                 table[-1].append(
                     f"[Day {day_count}](#day-{day_count}-{day_format.lower()}) | ")
@@ -71,6 +75,8 @@ End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days
         return "".join(diary)
 
     def get_string_table(self):
+        if not self.table:
+            self.table = self.gen_table(self.day_iter)
         string_table = ""
         for row in self.table:
             string_table += "".join(row)
