@@ -57,15 +57,13 @@ End Date (without any breaks): **{(self.start_day + datetime.timedelta(self.days
             diary.append(f"""
 ### Day {day_count}: {day_format}
 
-**Today's Progress**: 
+**Today's Progress**:
 
-**Thoughts**: 
+**Thoughts**:
 
-**Link(s) to work**: [Example](https://www.example.com) 
+**Link(s) to work**: [Example](https://www.example.com)
 
-| |
-| :--: |
-| [Back to Top](#{self.days}-days-of-code---log) |
+[Back to Top](#{self.days}-days-of-code---log)
 
 ----
 """)
