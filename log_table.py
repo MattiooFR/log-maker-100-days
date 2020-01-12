@@ -26,7 +26,7 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
 """
         return intro
 
-    def get_header(self):
+    def get_table_header(self):
         header = [["| Days |"]]
         header[-1].extend([f" {str(i)} |" for i in range(1, self.columns + 1)])
         header.append([f"| -- " for i in range(self.columns + 1)])
@@ -36,7 +36,7 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
     def gen_table(self, iterator):
         day_count = 1
         table = []
-        table.extend(self.get_header())
+        table.extend(self.get_table_header())
         while day_count <= self.days:
             row_counter = 0
             table.append([])
@@ -52,7 +52,7 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
                     break
         return table
 
-    def get_diary(self):
+    def get_blank_diary(self):
         diary = []
         day_count = 1
         while day_count <= self.days:
@@ -61,9 +61,9 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
             diary.append(f"""
 ### Day {day_count}: {day_format}
 
-**Today's Progress**:
+**Today's Progress**: 
 
-**Thoughts**:
+**Thoughts**: 
 
 **Link(s) to work**: [Example](https://www.example.com)
 
@@ -74,20 +74,16 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
             day_count += 1
         return "".join(diary)
 
-    def get_string_table(self):
+    def get_string_table(self, iterator=None):
+        iterator = iterator if iterator else self.day_iter
         if not self.table:
-            self.table = self.gen_table(self.day_iter)
+            self.table = self.gen_table(iterator)
         string_table = ""
         for row in self.table:
             string_table += "".join(row)
             string_table += "\n"
         string_table += "\n"
         return string_table + "-----"
-
-    def write_table(self, filename):
-        with open("test.md", "w") as write_file:
-            write_file.write(self.get_string_table())
-
 
 if __name__ == '__main__':
     lt = LogTable(datetime.date.today(), columns=13, days=144)

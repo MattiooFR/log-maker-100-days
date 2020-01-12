@@ -97,7 +97,7 @@ def write_log_table(filename, create_string, start_day, duration):
         log_table = LogTable(start_day, days=duration)
         f.write(log_table.get_intro())
         f.write(log_table.get_string_table())
-        f.write(log_table.get_diary())
+        f.write(log_table.get_blank_diary())
         f.write(f"\n\n\n# Conclusion\n\n")
     if VERBOSE:
         print(f"Successfully wrote log file to {filename}")
