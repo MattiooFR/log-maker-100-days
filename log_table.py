@@ -58,21 +58,45 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
         while day_count <= self.days:
             day = self.start_day + datetime.timedelta(day_count - 1)
             day_format = day.strftime("%B %d, %Y")
-            diary.append(f"""
-### Day {day_count}: {day_format}
+            diary.append(self.get_string_entry(day_count, day_format))
+            day_count += 1
+        return "".join(diary)
 
-**Today's Progress**: 
+    def get_string_entry(
+            self,
+            day_count,
+            day_format,
+            progress="",
+            thoughts="",
+            work="[Example](https://www.example.com)"):
+        return f"""
+### Day {day_count}:{" " + day_format if day_format else ""}
 
-**Thoughts**: 
+**Today's Progress**:{" " + progress if progress else ""}
 
-**Link(s) to work**: [Example](https://www.example.com)
+**Thoughts**:{" " + thoughts if thoughts else ""}
+
+**Link(s) to work**:\n{work}
 
 [Back to Top](#{self.days}-days-of-code---log)
 
 ----
-""")
-            day_count += 1
-        return "".join(diary)
+"""
+    def diary_from_entry_list(self, entry_list):
+        '''
+        Takes in a list of diary entries with keys
+        Day -> datetime
+        Progress -> Progress made str
+        Thoughts -> Thoughts from the day str
+        Work -> Links to work str
+        '''
+        return [self.get_string_entry(
+                i + 1,
+                entry['Day'].strftime("%B %d, %Y"),
+                progress=entry["Progress"],
+                thoughts=entry["Thoughts"],
+                work=entry["Link"]) for i,
+            entry in enumerate(entry_list)]
 
     def get_string_table(self, iterator=None):
         iterator = iterator if iterator else self.day_iter
