@@ -2,11 +2,10 @@ import datetime
 import os.path
 from argparse import ArgumentParser
 from log_table import LogTable
-
+from log_parser import LogParser
 
 # TODO Put all the text parameters in another file (help customisation and
 # later internationnalization).
-
 
 class ErrorFormatDate(Exception):
     pass
@@ -64,6 +63,8 @@ def get_args():
         type=str)
     parser.add_argument("-v", "--verbose", help='print process infos',
                         action="store_true")
+    parser.add_argument("-u", "--update", help='update an existing log file',
+                        action="store_true")
     args = parser.parse_args()
     return args
 
@@ -78,12 +79,12 @@ def get_start_day(args, isDateparserLoaded):
     return start_day
 
 
-def get_create(args, filename):
+def get_create_string(args, filename):
     if os.path.isfile(filename) and args.overwrite:
-        create = "w"
+        create_string = "w"
     else:
-        create = "x"
-    return create
+        create_string = "x"
+    return create_string
 
 
 def get_filename(args):
@@ -94,21 +95,40 @@ def get_filename(args):
     return filename
 
 
+def get_verbosity(args):
+    return args.verbose
+
+def print_message(args, start_day, duration, filename, create_string):
+    print(f"main.py called with args: {args}")
+    print(f"Writing log with start_day: {start_day} and duration: {duration} days "\
+        + f"to filename '{filename}' with file writing options '{create_string}''")
+
+def write_log_table(filename, create_string, start_day, duration):
+    with open(filename, create_string) as f:
+        log_table = LogTable(start_day, days=duration)
+        f.write(log_table.get_intro())
+        f.write(log_table.get_string_table())
+        f.write(log_table.get_blank_diary())
+        f.write(f"\n\n\n# Conclusion\n\n")
+    if VERBOSE:
+        print(f"Successfully wrote log file to {filename}")
+
 def main():
     args = get_args()
     DPLoaded = get_date_parser_loaded()
     start_day = get_start_day(args, DPLoaded)
     duration = args.duration
     filename = get_filename(args)
-    create = get_create(args, filename)
+    create_string = get_create_string(args, filename)
 
-    with open(filename, create) as f:
-        log_table = LogTable(start_day, days=duration, filetype=args.type)
-        f.write(log_table.get_intro())
-        f.write(log_table.get_string_table())
-        f.write(log_table.get_diary())
-        f.write(f"\n\n\n# Conclusion\n\n")
+    if VERBOSE:
+        print_message(args, start_day, duration, filename, create_string)
 
+    if args.update:
+        parser = LogParser(filename)
+        parser.update_log()
+    else:
+        write_log_table(filename, create_string, start_day, duration)
 
 if __name__ == '__main__':
     main()
