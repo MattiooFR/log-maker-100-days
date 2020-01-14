@@ -23,10 +23,10 @@ class LogParser():
         self.day_list, self.new_day_log = self.get_new_day_log()
         self.table_generator = LogTable(columns=self.get_columns(), days=self.days)
     
-    '''
-    Getting the new diary and log
-    -------------------------------- 
-    '''
+    # 
+    # Getting the new diary and log
+    # -------------------------------- 
+    # 
 
     def parse_log(self):
         with open(self.log_file, 'r') as log:
@@ -97,10 +97,10 @@ class LogParser():
                 return False
         return True
 
-    '''
-    Updating logs
-    --------------------------- 
-    '''
+    # 
+    # Updating logs
+    # --------------------------- 
+    # 
 
     def update_log(self):
         self.update_diary()
