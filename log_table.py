@@ -2,18 +2,19 @@ import datetime
 
 
 class LogTable():
-    def __init__(self, start_day=datetime.date.today(), columns=10, days=100):
+    def __init__(self, start_day=datetime.date.today(), columns=10, days=100, filetype="md"):
         self.columns = columns
         self.days = days
         self.start_day = start_day
         self.table = None
+        self.filetype = filetype
         self.day_iter = iter([self.start_day + datetime.timedelta(day_count - 1) for day_count in range(1, self.days + 1)])
 
     def get_intro(self, start_day=None, end_day=None, days=None):
         start_day = start_day if start_day else self.start_day
         end_day = end_day if end_day else start_day + datetime.timedelta(self.days - 1)
         days = days if days else self.days
-        
+
         if self.filetype == "md":
           intro = f"""# {days} Days Of Code - Log
 *Main Commitment*:
@@ -94,7 +95,7 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
     def gen_table(self, iterator):
         day_count = 1
         table = []
-        
+
         table.extend(self.get_table_header())
 
         if self.filetype == "md":
@@ -163,9 +164,9 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
 
 [Back to Top](#{self.days}-days-of-code---log)
 
-----""")
+----"""
         elif self.filetype == "html":
-            return f"""    <h3 id="day-{day_count}-{day_format_href.lower()}">Day {day_count}: {day_format}</h3>
+          return f"""    <h3 id="day-{day_count}-{day_format.lower()}">Day {day_count}: {day_format}</h3>
     <p><strong>Today's Progress</strong>:</p>
     <p><strong>Thoughts:</strong></p>
     <p>
@@ -175,7 +176,7 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
     <p><a href="#{self.days}-days-of-code---log">Back to Top</a></p>
     <hr />
 
-""")
+"""
 
     def diary_from_entry_list(self, entry_list):
         '''
@@ -202,8 +203,8 @@ End Date (without any breaks): **{end_day.strftime("%B %d, %Y")}**
             string_table += "".join(row)
             string_table += "\n"
         string_table += "\n"
-        
-        return string_table + "-----"
+
+        return string_table + "-----" if self.filetype == "md" else string_table
 
 
     def write_table(self, filename):

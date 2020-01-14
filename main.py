@@ -7,6 +7,8 @@ from log_parser import LogParser
 # TODO Put all the text parameters in another file (help customisation and
 # later internationnalization).
 
+VERBOSE = False
+
 class ErrorFormatDate(Exception):
     pass
 
@@ -98,14 +100,14 @@ def get_filename(args):
 def get_verbosity(args):
     return args.verbose
 
-def print_message(args, start_day, duration, filename, create_string):
+def print_message(args, start_day, duration, filename, create_string, filetype):
     print(f"main.py called with args: {args}")
     print(f"Writing log with start_day: {start_day} and duration: {duration} days "\
         + f"to filename '{filename}' with file writing options '{create_string}''")
 
-def write_log_table(filename, create_string, start_day, duration):
+def write_log_table(filename, create_string, start_day, duration, filetype):
     with open(filename, create_string) as f:
-        log_table = LogTable(start_day, days=duration)
+        log_table = LogTable(start_day, days=duration, filetype=filetype)
         f.write(log_table.get_intro())
         f.write(log_table.get_string_table())
         f.write(log_table.get_blank_diary())
@@ -115,20 +117,22 @@ def write_log_table(filename, create_string, start_day, duration):
 
 def main():
     args = get_args()
+    VERBOSE = get_verbosity(args)
     DPLoaded = get_date_parser_loaded()
     start_day = get_start_day(args, DPLoaded)
     duration = args.duration
     filename = get_filename(args)
     create_string = get_create_string(args, filename)
+    filetype = args.type
 
     if VERBOSE:
-        print_message(args, start_day, duration, filename, create_string)
+        print_message(args, start_day, duration, filename, create_string, filetype)
 
     if args.update:
         parser = LogParser(filename)
         parser.update_log()
     else:
-        write_log_table(filename, create_string, start_day, duration)
+        write_log_table(filename, create_string, start_day, duration, filetype)
 
 if __name__ == '__main__':
     main()
