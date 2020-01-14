@@ -1,17 +1,11 @@
 import datetime
 import os.path
-import string
 from argparse import ArgumentParser
 from log_table import LogTable
 from log_parser import LogParser
 
-# TODO :
-# I would suggest to change the name of your main.py, that could be confusing.
-# I would also put all the text parameters in another file (help customisation and later internationalization).
-# You could also exit at the very begining it all the lib are not available (os.exit(1) or something close)...
-
-
-VERBOSE = False
+# TODO Put all the text parameters in another file (help customisation and
+# later internationnalization).
 
 class ErrorFormatDate(Exception):
     pass
@@ -20,27 +14,53 @@ class ErrorFormatDate(Exception):
 def get_date_parser_loaded():
     try:
         import dateparser
-    except ImportError as e:
-        print("# INFO : Module dateparser is not installed, run : 'pip install dateparser', \
-    or pipenv|conda install dateparser if this is what you are using. \
-    A log.md with the date of today will still be created in case this is what you are looking for.")
+        global dateparser
+    except ImportError:
+        print(
+            "# INFO : Module dateparser is not installed, run : 'pip install dateparser', "
+            "or pipenv|conda install dateparser if this is what you are using. \n"
+            f"A log.{get_args().type} with the date of today ({datetime.date.today()}) "
+            "will still be created in case this is what you are looking for.")
         return False
     return True
 
 
 def get_args():
     parser = ArgumentParser()
-    parser.add_argument("date", nargs='?', default="",
-                        help='Set your own starting date : 22/12/2019, yesterday, or\
-                            "20 of december 2019" in any language. Default is today')
-    parser.add_argument("-o", "--overwrite", help='overwrite the existing log.md file',
-                        action="store_true")
-    parser.add_argument("-f", "--filename", help='choose your own filename output',
-                        type=str, default="log.md")
-    parser.add_argument("-l", "--list", help='append this log to an existing list of logs',
-                        action="store_true")
-    parser.add_argument("-d", "--duration", help='set a custom duration for your challenge',
-                        default=100, type=int)
+    parser.add_argument(
+        "date",
+        nargs='?',
+        default="",
+        help='Set your own starting date : 22/12/2019, yesterday, or\
+             "20 of december 2019" in any language. Default is today')
+    parser.add_argument(
+        "-o",
+        "--overwrite",
+        help='overwrite the existing log.md file',
+        action="store_true")
+    parser.add_argument(
+        "-f",
+        "--filename",
+        help='choose your own filename output',
+        type=str,
+        default="log")
+    parser.add_argument(
+        "-l",
+        "--list",
+        help='append this log to an existing list of logs',
+        action="store_true")
+    parser.add_argument(
+        "-d",
+        "--duration",
+        help='set a custom duration for your challenge',
+        default=100,
+        type=int)
+    parser.add_argument(
+        "-t",
+        "--type",
+        help='generate your log in html format',
+        default="md",
+        type=str)
     parser.add_argument("-v", "--verbose", help='print process infos',
                         action="store_true")
     parser.add_argument("-u", "--update", help='update an existing log file',
@@ -68,19 +88,10 @@ def get_create_string(args, filename):
 
 
 def get_filename(args):
-    if len(args.filename) > 3 and args.filename[-3:] == ".md":
+    if len(args.filename) > 3 and args.filename[-3:] == args.type:
         filename = args.filename
     else:
-        filename = args.filename + ".md"
-    while not args.overwrite and args.list and os.path.isfile(filename):
-        if filename[-4] not in string.digits:
-            filename = filename[:-3] + "1" + filename[-3:]
-        else:
-            i = -5
-            while i > (-1 * len(filename)) and filename[i] in string.digits:
-                i -= 1
-            filename = filename[:i + 1] + str(int(filename[i + 1 : -3]) + 1) + filename[-3:]
-    
+        filename = args.filename + "." + args.type
     return filename
 
 
@@ -102,10 +113,8 @@ def write_log_table(filename, create_string, start_day, duration):
     if VERBOSE:
         print(f"Successfully wrote log file to {filename}")
 
-
 def main():
     args = get_args()
-    VERBOSE = get_verbosity(args)
     DPLoaded = get_date_parser_loaded()
     start_day = get_start_day(args, DPLoaded)
     duration = args.duration
