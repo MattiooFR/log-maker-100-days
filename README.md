@@ -1,4 +1,4 @@
-# log-maker-100-days
+# 100DaysOfCode Challenge `log.md` Generator
 
 Welcome to this Log Maker.
 
@@ -19,12 +19,16 @@ Available options when running the program :
 ```
 -o, --overwrite : overwrite if file already exist
 -d, --duration : custom challenge duration
--f, --filename : custom generated filename (default = 'log.md')
+-f, --filename : custom generated filename, default is 'log.md'
+-t, --type : change the generated filetype, default is 'md'(markdown), available : 'html'
+-u, --update : update a log.md file that already exist by removing the missed days and adding them as new days at the end
 ```
 
 ### Todo :
 
-* [ ] Update existing file if days are missed during challenge
-* [ ] New output format (html, excel, ...)
+* [x] Update existing file if days are missed during challenge
+* [x] New output format (html, excel, ...)
 * [ ] Make a live website log generator for challenge
 * [ ] Choose any type of challenge (not just code)
+* [ ] Implement ninja2 library to generate the html with a template
+* [ ] Use BeautifulSoup library to parse html file
